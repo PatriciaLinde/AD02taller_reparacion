@@ -21,7 +21,7 @@ public class Averia {
 
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
-private long id;
+private Long id;
 private String descripcion;
 
 @Enumerated (EnumType.STRING)//indico enumerado tipo string en la base de datos
@@ -32,7 +32,7 @@ private LocalDateTime fechaCreacion;
 private LocalDateTime fechaUltimaActualizacion;
 
 
-    @JsonIgnore //Para que Jackson no serielice esta propiedad a JSON y no se forme un buble infinito
+
     @ManyToOne(optional = false)//obliga que cada averia tenga un vehiculo asociado
     @JoinColumn(nullable = false)//no permite en ,la clave foranea tener vaor nulo
    private Vehiculo vehiculo;//la relacion con vehiculo

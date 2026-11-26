@@ -1,6 +1,7 @@
 package com.exampleapireparaciones.apireparaciones.controllers;
 
 import com.exampleapireparaciones.apireparaciones.entities.Averia;
+import com.exampleapireparaciones.apireparaciones.entities.EstadoReparacion;
 import com.exampleapireparaciones.apireparaciones.entities.Vehiculo;
 import com.exampleapireparaciones.apireparaciones.repositories.AveriaRepository;
 import com.exampleapireparaciones.apireparaciones.repositories.VehiculoRepository;
@@ -18,6 +19,7 @@ public class AveriaController {
 
     @Autowired
     AveriaRepository averiaRepository;
+    @Autowired
     VehiculoRepository vehiculoRepository;
     //devuelve la lista de averias
     @GetMapping
@@ -60,10 +62,26 @@ public class AveriaController {
                 .map(averia -> {
                     averia.setDescripcion(averiaNueva.getDescripcion());
                     averia.setEstado(averiaNueva.getEstado());
-                    return ResponseEntity.ok(averiaRepository.save(averiaNueva));
+                    return ResponseEntity.ok(averiaRepository.save(averia));
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
-
-
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteAveria(@PathVariable Long id) {
+
+        return averiaRepository.findById(id)
+                .map(averiaencontrada -> {
+
+                        if (averiaencontrada.getEstado() != EstadoReparacion.TERMINADO) {//distintadeterminado
+                            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+
+                    }
+
+                    averiaRepository.delete(averiaencontrada);
+                    return ResponseEntity.noContent().build();
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
 }

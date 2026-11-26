@@ -1,5 +1,6 @@
 package com.exampleapireparaciones.apireparaciones.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,13 +23,13 @@ public class Vehiculo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  long id;
+    private  Long id;
     @Column(unique = true,nullable = false)
     private  String matricula;
     private  String modelo;
     private   LocalDate fechaMatriculacion;
     //falta averias que es la relacion una lista
-
+    @JsonIgnore //Para que Jackson no serielice esta propiedad a JSON y no se forme un buble infinitos
     @OneToMany(mappedBy = "vehiculo", cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, orphanRemoval = true)
     private List<Averia> averias = new ArrayList<>();
 
